@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm Equipment Hub - Rentals</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1em;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        header img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        section {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            box-sizing: border-box;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .rental-item {
+            flex: 0 0 48%;
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .rental-item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .product-details {
+            text-align: left;
+        }
+
+        .product-details h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .product-details p {
+            margin: 8px 0;
+        }
+
+        .price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #4caf50;
+        }
+
+        .details-link {
+            color: #007bff;
+            text-decoration: underline;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .hidden-details {
+            display: none;
+            margin-top: 15px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+
+        .contact-details p {
+            margin: 8px 0;
+        }
+
+        .details-container {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .details-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+            color: #555;
+        }
+	
+    .menu-btn {
+      cursor: pointer;
+      font-size: 20px;
+      background: none;
+      border: none;
+      color: #333;
+    }
+
+    .nav-menu {
+      list-style-type: none;
+      padding: 0;
+      text-align: center;
+      display: none; 
+      position: absolute;
+      background-color: #ffffff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 200px;
+      border-radius: 8px;
+      z-index: 1;
+    }
+
+    .nav-menu li {
+      margin: 10px;
+    }
+
+    .nav-menu a {
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+      font-size: 16px;
+      display: block;
+      padding: 10px;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+    }
+
+    .nav-menu a:hover {
+      background-color: #f0f0f0;
+    }
+
+    .add-to-cart-button {
+      background-color: #007bff;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 15px;
+    }
+    </style>
+</head>
+<body>
+
+    <header>
+        <img src="fh_logo.jpg" alt="App Logo">
+        <h1>Farm Equipment Hub - Rentals</h1>
+    </header>
+
+    <button class="menu-btn" onclick="toggleMenu()">☰ Menu</button>
+
+    <ul class="nav-menu">
+        <li><a href="#">Home</a></li>
+        <li><a href="cart.html">Cart</a></li>
+        <li><a href="home.html">Logout</a></li>
+    </ul>
+
+    <section id="productList"></section>
+
+    <div class="details-container" id="detailsContainer">
+        <div class="details-content">
+            <span class="close-button" onclick="closeDetails('details1', 'details2')">&times;</span>
+            <div id="detailsContent"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (!localStorage.getItem('cartItems')) {
+                localStorage.setItem('cartItems', JSON.stringify([]));
+            }
+
+            var products = JSON.parse(localStorage.getItem('products')) || [];
+
+            var productList = document.getElementById('productList');
+
+            if (products.length === 0) {
+                productList.innerHTML = '<p>No products available</p>';
+            } else {
+                products.forEach(function (product) {
+                    var imagePath = product.image.replace("C:\\fakepath\\", "Images/");
+                    var productDetails = document.createElement('div');
+                    productDetails.classList.add('rental-item');
+                    productDetails.innerHTML = `<img src="${imagePath}" alt="${product.name}">
+                                            <div class="product-details">
+                                                <h2>${product.name}</h2>
+                                                <p><strong>Price:</strong> <span class="price">₹${product.price} per hour</span></p>
+                                                <p><strong>Farmer Name:</strong> ${product.farmerName}</p>
+                                                <p><strong>Location:</strong> ${product.location}</p>
+                                                <button class="add-to-cart-button" onclick="addToCart('${product.name}', '${product.price}', '${product.farmerName}', '${product.location}')">Add to Cart</button>
+
+                                                <div class="details-link" onclick="showDetails('${product.name.replace(/\s+/g, '')}')">Get More Info</div>
+                                                <div id="${product.name.replace(/\s+/g, '')}" class="hidden-details">
+                                                    <span class="close-button" onclick="closeDetails('${product.name.replace(/\s+/g, '')}')">&times;</span>
+                                                    <h3>About the Farmer</h3>
+                                                    <p>${product.aboutFarmer}</p>
+                                                    <h3>Description</h3>
+                                                    <p>${product.description}</p>
+                                                    <h3>Contact Details</h3>
+                                                    <p><strong>Phone:</strong> ${product.contactDetails}</p>
+                                                </div>
+                                            </div>`;
+                    productList.appendChild(productDetails);
+                });
+            }
+        });
+	
+	function addToCart(name, price, farmerName, location) {
+    var cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    var newItem = { name: name, price: price, farmerName: farmerName, location: location };
+
+    var existingItemIndex = -1;
+
+    for (var i = 0; i < cartItems.length; i++) {
+        if (cartItems[i].name === name) {
+            existingItemIndex = i;
+            break;
+        }
+    }
+
+    if (existingItemIndex !== -1) {
+        cartItems[existingItemIndex].quantity += 1;
+    } else {
+        newItem.quantity = 1;
+        cartItems.push(newItem);
+    }
+
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    alert('Item added to cart!');
+}
+
+
+        function showDetails(detailsId) {
+            var detailsContent = document.getElementById('detailsContent');
+            var detailsContainer = document.getElementById('detailsContainer');
+            var details = document.getElementById(detailsId);
+
+            if (detailsContainer.style.display === 'none') {
+                detailsContent.innerHTML = details.innerHTML;
+                detailsContainer.style.display = 'flex';
+            } else {
+                detailsContainer.style.display = 'none';
+            }
+        }
+
+        function closeDetails(...detailsIds) {
+            var detailsContainer = document.getElementById('detailsContainer');
+            detailsContainer.style.display = 'none';
+            detailsIds.forEach(detailsId => {
+                var details = document.getElementById(detailsId);
+                details.style.display = 'none';
+            });
+        }
+
+        function toggleMenu() {
+            var menu = document.querySelector('.nav-menu');
+            menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+        }
+
+        document.addEventListener('click', function (event) {
+            var menu = document.querySelector('.nav-menu');
+            var button = document.querySelector('.menu-btn');
+            if (event.target !== menu && event.target !== button) {
+                menu.style.display = 'none';
+            }
+        });
+
+	document.addEventListener('DOMContentLoaded', function () {
+    		var menuItems = document.querySelectorAll('.nav-menu a');
+
+    		if (userRole === 'renter') {
+      		menuItems[1].style.display = 'none'; 
+    		} else if (userRole === 'farmer') {
+    		}
+  	});
+
+    </script>
+
+</body>
+</html>

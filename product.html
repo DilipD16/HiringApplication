@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmers App - Add Product</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: url('product-background.jpg') center/cover no-repeat; 
+            background-color: #f8f9fa; 
+        }
+
+        .product-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        .product-container h2 {
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #495057;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            margin-top: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .file-input {
+            margin-top: 5px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .footer-text {
+            color: #6c757d;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="product-container">
+        <h2>Add New Product</h2>
+        
+        <div class="form-group">
+            <label for="productName">Product Name:</label>
+            <input type="text" id="productName" name="productName" required>
+        </div>
+
+        <div class="form-group">
+            <label for="productPrice">Product Price (₹):</label>
+            <input type="number" id="productPrice" name="productPrice" min="1" required>
+        </div>
+
+        <div class="form-group">
+            <label for="farmerName">Farmer Name:</label>
+            <input type="text" id="farmerName" name="farmerName" required>
+        </div>
+
+        <div class="form-group">
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location" required>
+        </div>
+
+        <div class="form-group">
+            <label for="aboutFarmer">About the Farmer:</label>
+            <textarea id="aboutFarmer" name="aboutFarmer" rows="4" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="productDescription">Product Description:</label>
+            <textarea id="productDescription" name="productDescription" rows="4" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="contactDetails">Contact Details (Phone Number):</label>
+            <input type="tel" id="contactDetails" name="contactDetails" pattern="[0-9]{10}" required>
+        </div>
+
+        <div class="form-group file-input">
+            <label for="productImage">Product Image:</label>
+            <input type="file" id="productImage" name="productImage" accept="image/*" required>
+        </div>
+
+        <button type="button" onclick="addProduct()">Add Product</button>
+
+        <p class="footer-text"><a href="rental.html">View All Products</a></p>
+    </div>
+
+    <script>
+        function addProduct() {
+            var productName = document.getElementById('productName').value;
+            var productPrice = document.getElementById('productPrice').value;
+            var farmerName = document.getElementById('farmerName').value;
+            var location = document.getElementById('location').value;
+            var aboutFarmer = document.getElementById('aboutFarmer').value;
+            var productDescription = document.getElementById('productDescription').value;
+            var contactDetails = document.getElementById('contactDetails').value;
+            var productImage = document.getElementById('productImage').value;
+
+            
+            var newProduct = {
+                name: productName,
+                price: productPrice,
+                farmerName: farmerName,
+                location: location,
+                aboutFarmer: aboutFarmer,
+                description: productDescription,
+                contactDetails: contactDetails,
+                image: productImage
+            };
+            
+            var products = JSON.parse(localStorage.getItem('products')) || [];
+            products.push(newProduct);
+            localStorage.setItem('products', JSON.stringify(products));
+
+            alert('Product added successfully!');
+        }
+    </script>
+
+</body>
+</html>

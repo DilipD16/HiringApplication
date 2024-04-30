@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmers App - Farmer Sign Up</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: url('farmer-background.jpg') center/cover no-repeat; 
+            background-color: #f8f9fa;
+        }
+
+        .farmer-signup-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        .farmer-signup-container h2 {
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #495057;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            margin-top: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .eye-icon {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .footer-text {
+            color: #6c757d;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="farmer-signup-container">
+        <h2>Farmers App Farmer Sign Up</h2>
+        
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+
+        <div class="form-group">
+            <label for="phoneNumber">Phone Number:</label>
+            <input type="tel" id="phoneNumber" name="phoneNumber" pattern="[0-9]{10}" required>
+        </div>
+
+        <div class="form-group password-container">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <span class="eye-icon" onclick="togglePasswordVisibility('password')">👁️</span>
+        </div>
+
+        <button type="button" onclick="farmerSignup()">Sign Up</button>
+
+        <p class="footer-text">Already have an account? <a href="farmer.html">Log In</a></p>
+    </div>
+
+    <script>
+        function togglePasswordVisibility(elementId) {
+            var passwordInput = document.getElementById(elementId);
+            passwordInput.type = (passwordInput.type === 'password') ? 'text' : 'password';
+        }
+
+        function farmerSignup() {
+            var username = document.getElementById('username').value;
+            var phoneNumber = document.getElementById('phoneNumber').value;
+            var password = document.getElementById('password').value;
+
+            var passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+            if (!passwordRegex.test(password)) {
+                alert('Password must contain at least 8 characters, including a capital letter, a number, and a special symbol.');
+                return;
+            }
+
+            if (phoneNumber.length !== 10) {
+                alert('Invalid phone number. Please enter a 10-digit phone number.');
+                return;
+            }
+
+            var farmers = JSON.parse(localStorage.getItem('farmers')) || [];
+            var existingFarmer = farmers.find(f => f.username === username);
+
+            if (existingFarmer) {
+                alert('Username already exists. Please choose a different username.');
+            } else {
+                var newFarmer = { username, phoneNumber, password };
+                farmers.push(newFarmer);
+                localStorage.setItem('farmers', JSON.stringify(farmers));
+                alert('Sign up successful! Redirecting to login page...');
+                window.location.href = 'farmer.html';
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1em;
+            text-align: center;
+        }
+
+        header img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #paymentContent {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .total {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .taxes {
+            margin-bottom: 10px;
+        }
+
+        .delivery-location {
+            margin-bottom: 20px;
+        }
+
+        #deliveryLocation {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-top: 5px;
+        }
+
+        .delivery-info {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .delivery-charges {
+            margin-bottom: 20px;
+        }
+
+        hr {
+            margin: 15px 0;
+            border: 0;
+            border-top: 1px solid #ddd;
+        }
+
+        .total {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .payment-button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            text-align: center;
+            display: block;
+            text-decoration: none;
+        }
+
+        .disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="fh_logo.jpg" alt="App Logo">
+        <h1>Payment</h1>
+    </header>
+
+    <div id="paymentContent">
+        <div class="total" id="totalAmount"></div>
+        <div class="taxes">Taxes (10%): ₹<span id="taxAmount"></span></div>
+        <div class="delivery-location">
+            <label for="deliveryLocation">Delivery Location:</label>
+            <input type="text" id="deliveryLocation" placeholder="Enter your delivery location" oninput="validateDeliveryLocation()">
+            <p class="delivery-info">Estimated delivery within 3-5 business days</p>
+        </div>
+        <div class="delivery-charges">Delivery Charges: ₹<span id="deliveryCharges"></span></div>
+        <hr>
+        <div class="total" id="finalAmount"></div>
+        <a href="#" class="payment-button disabled" id="payButton" onclick="processPayment()" disabled>Proceed to Pay</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            updateTotal();
+        });
+
+        function updateTotal() {
+            var cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            var total = cartItems.reduce(function (acc, item) {
+                return acc + item.price * item.quantity * item.hours;
+            }, 0);
+
+            var taxAmount = total * 0.1;
+            var deliveryCharges = 50; // You can adjust the delivery charges
+
+            var totalAmount = total + taxAmount + deliveryCharges;
+
+            document.getElementById('totalAmount').textContent = 'Total: ₹' + total.toFixed(2);
+            document.getElementById('taxAmount').textContent = taxAmount.toFixed(2);
+            document.getElementById('deliveryCharges').textContent = deliveryCharges.toFixed(2);
+            document.getElementById('finalAmount').textContent = 'Final Amount: ₹' + totalAmount.toFixed(2);
+
+            validateDeliveryLocation(); 
+        }
+
+        function validateDeliveryLocation() {
+            var deliveryLocation = document.getElementById('deliveryLocation').value;
+            var payButton = document.getElementById('payButton');
+
+            if (deliveryLocation.trim() !== '') {
+                payButton.classList.remove('disabled');
+                payButton.removeAttribute('disabled');
+            } else {
+                payButton.classList.add('disabled');
+                payButton.setAttribute('disabled', 'disabled');
+            }
+        }
+
+        function processPayment() {
+            var deliveryLocation = document.getElementById('deliveryLocation').value;
+
+            
+
+            alert('Payment processed successfully! Your items will be delivered to ' + deliveryLocation);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmers App - Home</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .home-container {
+            text-align: center;
+            max-width: 800px;
+            animation: slideInUp 1s ease-in-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            color: #343a40;
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #6c757d;
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        .highlight {
+            color: #28a745;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="home-container">
+        <h1>Welcome to Farmers App</h1>
+        
+        <p>
+            Agriculture is the backbone of our nation, and we understand the challenges farmers face in accessing
+            modern and efficient farming equipment. Farmers App is here to revolutionize the way you manage your
+            agricultural machinery needs.
+        </p>
+
+        <p>
+            Our platform connects farmers with a vast network of equipment renters, offering a diverse range of
+            high-quality machinery. Whether you are a small-scale farmer or managing vast acres of land, Farmers App
+            provides a one-stop solution for all your equipment requirements.
+        </p>
+
+        <p>
+            The <span class="highlight">Farmers App Advantage</span>:
+        </p>
+
+        <ul>
+            <li>🚜 <span class="highlight">Wide Range of Equipment:</span> From tractors and plows to advanced harvesters, find the right tools for your farm.</li>
+            <li>🌱 <span class="highlight">Efficiency and Productivity:</span> Access modern and well-maintained equipment to boost your farm's productivity.</li>
+            <li>💰 <span class="highlight">Cost-Effective Solutions:</span> Renting equipment eliminates the need for large upfront investments, making it budget-friendly.</li>
+            <li>🌍 <span class="highlight">Connect with Farmers:</span> If you're a farmer looking to showcase your equipment, our platform connects you with potential renters.</li>
+            <li>🛠️ <span class="highlight">Easy to Use:</span> Our user-friendly interface ensures a seamless experience, from browsing equipment to placing orders.</li>
+        </ul>
+
+        <p>
+            Ready to experience the future of farming? <a href="index.html">Login</a> to your account or <a href="signup.html">Sign Up</a> to join our growing community.
+            If you are a farmer looking to showcase your products, visit our <a href="farmer.html">Farmer Page</a>.
+        </p>
+    </div>
+
+</body>
+</html>

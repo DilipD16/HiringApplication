@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1em;
+            text-align: center;
+        }
+
+        header img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #cartContent {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .cart-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .cart-item p {
+            margin: 8px 0;
+        }
+
+        .quantity-control {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quantity-buttons button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .quantity-input {
+            width: 40px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .quantity-label {
+            margin-right: 10px;
+        }
+
+        hr {
+            margin: 15px 0;
+            border: 0;
+            border-top: 1px solid #ddd;
+        }
+
+        .total {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .checkout-button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+            text-decoration: none;
+            display: block;
+            width: 100%;
+            text-align: center;
+        }
+
+        .remove-button {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background-color: #ff3333;
+            color: #fff;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .cart-item:hover .remove-button {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="fh_logo.jpg" alt="App Logo">
+        <h1>Cart</h1>
+    </header>
+
+    <div id="cartContent"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var cartContent = document.getElementById('cartContent');
+            var cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+
+            if (cartItems.length === 0) {
+                cartContent.innerHTML = '<p>No items in the cart</p>';
+            } else {
+                cartItems.forEach(function (item, index) {
+                    var itemDetails = document.createElement('div');
+                    itemDetails.classList.add('cart-item');
+                    itemDetails.innerHTML = `<p><strong>Name:</strong> ${item.name}</p>
+                                            <p><strong>Price:</strong> ₹${item.price}</p>
+                                            <p><strong>Farmer Name:</strong> ${item.farmerName}</p>
+                                            <p><strong>Location:</strong> ${item.location}</p>
+                                            <div class="quantity-control">
+                                                <div class="quantity-label">
+                                                    <label for="quantity${index}">Quantity:</label>
+                                                </div>
+                                                <div class="quantity-buttons">
+                                                    <button onclick="changeQuantity(${index}, -1)">-</button>
+                                                </div>
+                                                <input id="quantity${index}" class="quantity-input" type="number" value="${item.quantity}" min="1" onchange="updateQuantity(${index}, this.value)">
+                                                <div class="quantity-buttons">
+                                                    <button onclick="changeQuantity(${index}, 1)">+</button>
+                                                </div>
+                                            </div>
+                                            <div class="quantity-control">
+                                                <div class="quantity-label">
+                                                    <label for="hours${index}">Hours:</label>
+                                                </div>
+                                                <div class="quantity-buttons">
+                                                    <button onclick="changeHours(${index}, -1)">-</button>
+                                                </div>
+                                                <input id="hours${index}" class="quantity-input" type="number" value="${item.hours}" min="1" onchange="updateHours(${index}, this.value)">
+                                                <div class="quantity-buttons">
+                                                    <button onclick="changeHours(${index}, 1)">+</button>
+                                                </div>
+                                            </div>
+                                            <hr>`;
+
+                    var removeButton = document.createElement('button');
+                    removeButton.textContent = 'Remove';
+                    removeButton.classList.add('remove-button');
+                    removeButton.onclick = function () {
+                        removeItem(index);
+                    };
+                    itemDetails.appendChild(removeButton);
+
+                    cartContent.appendChild(itemDetails);
+                });
+
+                var total = cartItems.reduce(function (acc, item) {
+                    return acc + item.price * item.quantity * item.hours;
+                }, 0);
+
+                var totalElement = document.createElement('div');
+                totalElement.classList.add('total');
+                totalElement.textContent = 'Total: ₹' + total.toFixed(2);
+                cartContent.appendChild(totalElement);
+            }
+        });
+
+        function changeQuantity(index, amount) {
+            var cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            if (cartItems[index]) {
+                cartItems[index].quantity += amount;
+                if (cartItems[index].quantity < 1) {
+                    cartItems[index].quantity = 1;
+                }
+                localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                location.reload();
+            }
+        }
+
+        function updateQuantity(index, value) {
+            var cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            if (cartItems[index]) {
+                cartItems[index].quantity = parseInt(value, 10) || 1;
+                localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                location.reload();
+            }
+        }
+
+        function changeHours(index, amount) {
+            var cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            if (cartItems[index]) {
+                cartItems[index].hours += amount;
+                if (cartItems[index].hours < 1) {
+                    cartItems[index].hours = 1;
+                }
+                localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                location.reload();
+            }
+        }
+
+        function updateHours(index, value) {
+            var cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            if (cartItems[index]) {
+                cartItems[index].hours = parseInt(value, 10) || 1;
+                localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                location.reload();
+            }
+        }
+
+        function removeItem(index) {
+            var cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            cartItems.splice(index, 1);
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+            location.reload();
+        }
+    </script>
+    <a href="payment.html" class="checkout-button">Proceed to Checkout</a>
+</body>
+</html>
